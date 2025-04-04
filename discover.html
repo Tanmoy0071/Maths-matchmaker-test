@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maths-matchmaker | Discover</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        /* Header */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 30px;
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .notification {
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e53935;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .sign-in-btn {
+            background-color: #2962ff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Mobile menu button */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Back button */
+        .back-btn {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #666;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .back-btn svg {
+            margin-right: 5px;
+        }
+
+        /* Main content */
+        .page-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #1f1f1f;
+        }
+
+        .page-description {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* Search section */
+        .search-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .filter-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Mathematician card */
+        .mathematician-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            margin-bottom: 20px;
+            flex-direction: row;
+        }
+
+        .mathematician-photo {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .mathematician-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mathematician-name {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #1f1f1f;
+        }
+
+        .mathematician-bio {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .interests-label {
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .interests-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .interest-tag {
+            background-color: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .connect-btn {
+            align-self: flex-end;
+            margin-top: auto;
+            background-color: #1677ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .mathematician-photo {
+                width: 250px;
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-nav {
+                display: none;
+            }
+
+            .main-nav.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: white;
+                padding: 20px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                gap: 15px;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                background-color: white;
+                padding: 1rem;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                gap: 1rem;
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .mathematician-card {
+                flex-direction: column;
+            }
+
+            .mathematician-photo {
+                width: 100%;
+                height: auto;
+                max-height: 350px;
+            }
+
+            .connect-btn {
+                align-self: stretch;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-title {
+                font-size: 24px;
+            }
+
+            .search-section {
+                flex-direction: column;
+            }
+
+            .search-bar {
+                width: 100%;
+            }
+
+            .filter-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .user-nav {
+                gap: 10px;
+            }
+
+            .sign-in {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            .notification {
+                margin-right: 5px;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+        }
+        .footer {
+    background-color: #f8f9fa;
+    padding: 3rem 0 1.5rem;
+    margin-top: 3rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+.footer-section:first-child {
+    grid-column: span 1;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.footer-logo svg {
+    margin-right: 0.5rem;
+}
+
+.footer-tagline {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.social-icons a {
+    color: #666;
+    transition: color 0.2s;
+}
+
+.social-icons a:hover {
+    color: #2962ff;
+}
+
+.footer-heading {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+    color: #333;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: #2962ff;
+}
+
+.footer-bottom {
+    max-width: 1200px;
+    margin: 2rem auto 0;
+    padding: 1.5rem 1rem 0;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #e9ecef;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.footer-bottom p {
+    display: flex;
+    align-items: center;
+}
+
+.footer-bottom svg {
+    margin: 0 0.3rem;
+}
+
+/* Responsive styles for footer */
+@media (max-width: 768px) {
+    .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .footer-section:first-child {
+        grid-column: span 2;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-section:first-child {
+        grid-column: span 1;
+    }
+}
+/* Add these styles to your existing CSS */
+
+.filter-dropdown {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 5px;
+    right: 0;
+    top: 50px !important;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.filter-btn.active-filter {
+    background-color: #1677ff;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .filter-dropdown {
+        width: 100%;
+        right: 0;
+        left: 0;
+        top: 40px !important;
+    }
+}
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2962ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                <path d="M8 7h8"></path>
+                <path d="M8 12h8"></path>
+                <path d="M8 17h8"></path>
+            </svg>
+            Maths-matchmaker
+        </a>
+        
+        <button class="mobile-menu-btn">☰</button>
+        
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="profile.html">Profile</a>
+            <a href="discover.html">Discover</a>
+            <a href="matches.html
+            ">Matches</a>
+            <div class="notification">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="notification-badge">2</span>
+            </div>
+            <a href="signin.html"><button class="sign-in-btn" href="signin.html">Sign In</button></a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <a href="#" class="back-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5"></path>
+                <path d="M12 19l-7-7 7-7"></path>
+            </svg>
+            Back to Home
+        </a>
+
+        <h1 class="page-title">Discover Mathematicians</h1>
+        <p class="page-description">Browse all potential connections and send match requests. If interests align, matches will be automatically accepted.</p>
+
+        <div class="search-section">
+            <div class="search-bar">
+                <div class="search-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <input type="text" placeholder="Search mathematicians...">
+            </div>
+            <button class="filter-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+                Filter by Interest
+            </button>
+        </div>
+
+        <div class="mathematician-card">
+            <img src="/api/placeholder/400/400" alt="Sophia Chen" class="mathematician-photo">
+            <div class="mathematician-info">
+                <h2 class="mathematician-name">Sophia Chen</h2>
+                <p class="mathematician-bio">PhD candidate in Mathematics at Tsinghua University, focusing on complex analysis and topology. I love teaching mathematics and making difficult concepts accessible to others.</p>
+                
+                <p class="interests-label">Interests:</p>
+                <div class="interests-tags">
+                    <div class="interest-tag">Complex Analysis</div>
+                    <div class="interest-tag">Topology</div>
+                    <div class="interest-tag">Mathematical Physics</div>
+                </div>
+                
+                <button class="connect-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                    </svg>
+                    Send Request
+                </button>
+            </div>
+        </div>
+
+        <div id="mathematician-list">
+            <!-- Additional mathematicians will be added here via JavaScript -->
+        </div>
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2962ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            <path d="M8 7h8"></path>
+                            <path d="M8 12h8"></path>
+                            <path d="M8 17h8"></path>
+                        </svg>
+                        Maths-matchmaker
+                    </div>
+                    <p class="footer-tagline">Connecting math enthusiasts around the world. Share, learn, and grow together.</p>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                        <a href="#" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+                        <a href="#" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                        <a href="#" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg></a>
+                        <a href="#" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+                        <a href="#" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+                        <a href="#" aria-label="Chat"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></a>
+                    </div>
+                </div>
+        
+                <div class="footer-section">
+                    <h3 class="footer-heading">Navigation</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">Matches</a></li>
+                        <li><a href="#">Discover</a></li>
+                    </ul>
+                </div>
+        
+                <div class="footer-section">
+                    <h3 class="footer-heading">Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Math Topics</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+        
+                <div class="footer-section">
+                    <h3 class="footer-heading">Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+        
+            <div class="footer-bottom">
+                <p>© 2025 Maths-matchmaker. All rights reserved.</p>
+                <p>Made with <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#ff79c6" stroke="#ff79c6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> for mathematical minds</p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Sample data for additional mathematicians
+        const mathematicians = [
+            {
+                name: "David Rodriguez",
+                photo: "/api/placeholder/400/400",
+                bio: "Professor at MIT working on algebraic geometry and number theory. Published over 40 papers and passionate about mentoring young mathematicians.",
+                interests: ["Algebraic Geometry", "Number Theory", "Cryptography"]
+            },
+            {
+                name: "Aisha Patel",
+                photo: "/api/placeholder/400/400",
+                bio: "Applied mathematician specializing in differential equations and their applications to biological systems. Currently researching epidemic modeling.",
+                interests: ["Differential Equations", "Mathematical Biology", "Data Science"]
+            },
+            {
+                name: "Michael Zhang",
+                photo: "/api/placeholder/400/400",
+                bio: "Computational mathematician with expertise in numerical methods and optimization. Developing algorithms for machine learning applications.",
+                interests: ["Numerical Analysis", "Optimization", "Machine Learning"]
+            }
+        ];
+
+        // Function to create mathematician cards
+        function createMathematicianCard(mathematician) {
+            const card = document.createElement('div');
+            card.className = 'mathematician-card';
+
+            const interestTags = mathematician.interests.map(interest => 
+                `<div class="interest-tag">${interest}</div>`
+            ).join('');
+
+            card.innerHTML = `
+                <img src="${mathematician.photo}" alt="${mathematician.name}" class="mathematician-photo">
+                <div class="mathematician-info">
+                    <h2 class="mathematician-name">${mathematician.name}</h2>
+                    <p class="mathematician-bio">${mathematician.bio}</p>
+                    
+                    <p class="interests-label">Interests:</p>
+                    <div class="interests-tags">
+                        ${interestTags}
+                    </div>
+                    
+                    <button class="connect-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                            <line x1="23" y1="11" x2="17" y2="11"></line>
+                        </svg>
+                        Send Request
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Add event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const mathematicianList = document.getElementById('mathematician-list');
+            
+            // Add sample mathematicians to the page
+            mathematicians.forEach(mathematician => {
+                const card = createMathematicianCard(mathematician);
+                mathematicianList.appendChild(card);
+            });
+
+            // Search functionality
+            const searchInput = document.querySelector('.search-bar input');
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const allCards = document.querySelectorAll('.mathematician-card');
+                
+                allCards.forEach(card => {
+                    const name = card.querySelector('.mathematician-name').textContent.toLowerCase();
+                    const bio = card.querySelector('.mathematician-bio').textContent.toLowerCase();
+                    const interests = card.querySelectorAll('.interest-tag');
+                    
+                    let matchesSearch = name.includes(searchTerm) || bio.includes(searchTerm);
+                    
+                    if (!matchesSearch) {
+                        interests.forEach(tag => {
+                            if (tag.textContent.toLowerCase().includes(searchTerm)) {
+                                matchesSearch = true;
+                            }
+                        });
+                    }
+                    
+                    card.style.display = matchesSearch ? 'flex' : 'none';
+                });
+            });
+
+            // Add click event for send request buttons
+            const connectButtons = document.querySelectorAll('.connect-btn');
+            connectButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const name = this.closest('.mathematician-info').querySelector('.mathematician-name').textContent;
+                    this.textContent = 'Request Sent';
+                    this.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Request Sent
+                    `;
+                    this.style.backgroundColor = '#52c41a';
+                    this.disabled = true;
+                    
+                    alert(`Connection request sent to ${name}!`);
+                });
+            });
+
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+            
+            menuToggle.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                const isClickInside = mainNav.contains(event.target) || menuToggle.contains(event.target);
+                
+                if (!isClickInside && mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768 && mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                }
+            });
+        });
+
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.mobile-menu-btn') && !event.target.closest('.nav-links')) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Add this to your existing JavaScript
+
+        document.addEventListener('DOMContentLoaded', function() {
+    // Get references to elements
+    const filterBtn = document.querySelector('.filter-btn');
+    const searchSection = document.querySelector('.search-section');
+    
+    // Create filter dropdown
+    const filterDropdown = document.createElement('div');
+    filterDropdown.className = 'filter-dropdown';
+    filterDropdown.style.display = 'none';
+    
+    // Math interests
+    const interests = [
+        'Number Theory', 'Abstract Algebra', 'Calculus', 
+        'Real Analysis', 'Complex Analysis', 'Topology', 
+        'Differential Geometry', 'Linear Algebra', 'Combinatorics',
+        'Graph Theory', 'Probability Theory', 'Statistics',
+        'Mathematical Physics', 'Algebraic Geometry', 'Cryptography',
+        'Mathematical Biology', 'Data Science', 'Numerical Analysis',
+        'Optimization', 'Machine Learning'
+    ];
+    
+    // Create header
+    const header = document.createElement('h3');
+    header.textContent = 'Math Interests (Select up to 3)';
+    header.style.marginTop = '0';
+    header.style.marginBottom = '15px';
+    header.style.fontSize = '18px';
+    filterDropdown.appendChild(header);
+
+    // Add message for limit
+    const limitMessage = document.createElement('p');
+    limitMessage.textContent = 'You can select a maximum of 3 interests';
+    limitMessage.style.color = '#666';
+    limitMessage.style.fontSize = '14px';
+    limitMessage.style.marginBottom = '10px';
+    limitMessage.style.display = 'none';
+    filterDropdown.appendChild(limitMessage);
+    
+    // Container for checkboxes
+    const interestsContainer = document.createElement('div');
+    interestsContainer.style.display = 'flex';
+    interestsContainer.style.flexWrap = 'wrap';
+    interestsContainer.style.gap = '10px';
+    
+    // Add interest checkboxes
+    interests.forEach(interest => {
+        const interestItem = document.createElement('div');
+        interestItem.style.display = 'flex';
+        interestItem.style.alignItems = 'center';
+        interestItem.style.gap = '5px';
+        interestItem.style.padding = '5px 10px';
+        interestItem.style.backgroundColor = '#f0f0f0';
+        interestItem.style.borderRadius = '15px';
+        interestItem.style.cursor = 'pointer';
+        interestItem.style.transition = 'background-color 0.2s';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = interest.replace(/\s+/g, '-').toLowerCase();
+        checkbox.name = interest;
+        checkbox.value = interest;
+        
+        const label = document.createElement('label');
+        label.htmlFor = checkbox.id;
+        label.textContent = interest;
+        label.style.fontSize = '14px';
+        label.style.cursor = 'pointer';
+        
+        interestItem.appendChild(checkbox);
+        interestItem.appendChild(label);
+        interestsContainer.appendChild(interestItem);
+        
+        // Make the whole item clickable
+        interestItem.addEventListener('click', function(e) {
+            if (e.target !== checkbox) {
+                const selected = document.querySelectorAll('.filter-dropdown input[type="checkbox"]:checked');
+                
+                // If trying to select more than 3
+                if (!checkbox.checked && selected.length >= 3) {
+                    limitMessage.style.display = 'block';
+                    limitMessage.style.color = '#ff4d4f';
+                    setTimeout(() => {
+                        limitMessage.style.color = '#666';
+                    }, 1500);
+                    return;
+                }
+                
+                checkbox.checked = !checkbox.checked;
+                
+                // Update UI for this item
+                if (checkbox.checked) {
+                    interestItem.style.backgroundColor = '#1677ff';
+                    interestItem.style.color = 'white';
+                } else {
+                    interestItem.style.backgroundColor = '#f0f0f0';
+                    interestItem.style.color = 'black';
+                }
+                
+                filterMathematicians();
+            }
+        });
+        
+        checkbox.addEventListener('change', function() {
+            const selected = document.querySelectorAll('.filter-dropdown input[type="checkbox"]:checked');
+            
+            // If trying to select more than 3
+            if (selected.length > 3) {
+                this.checked = false;
+                limitMessage.style.display = 'block';
+                limitMessage.style.color = '#ff4d4f';
+                setTimeout(() => {
+                    limitMessage.style.color = '#666';
+                }, 1500);
+                return;
+            }
+            
+            // Update UI for this item
+            if (this.checked) {
+                interestItem.style.backgroundColor = '#1677ff';
+                interestItem.style.color = 'white';
+            } else {
+                interestItem.style.backgroundColor = '#f0f0f0';
+                interestItem.style.color = 'black';
+            }
+            
+            filterMathematicians();
+        });
+    });
+    
+    filterDropdown.appendChild(interestsContainer);
+    
+    // Add button container
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.marginTop = '15px';
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.justifyContent = 'space-between';
+    
+    const clearBtn = document.createElement('button');
+    clearBtn.textContent = 'Clear All';
+    clearBtn.style.backgroundColor = '#f0f0f0';
+    clearBtn.style.border = '1px solid #ddd';
+    clearBtn.style.padding = '8px 15px';
+    clearBtn.style.borderRadius = '5px';
+    clearBtn.style.cursor = 'pointer';
+    
+    clearBtn.addEventListener('click', function() {
+        const checkboxes = filterDropdown.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => {
+            cb.checked = false;
+            cb.parentElement.style.backgroundColor = '#f0f0f0';
+            cb.parentElement.style.color = 'black';
+        });
+        limitMessage.style.display = 'none';
+        filterMathematicians();
+    });
+    
+    buttonContainer.appendChild(clearBtn);
+    filterDropdown.appendChild(buttonContainer);
+    
+    // Add the dropdown to the DOM
+    filterBtn.style.position = 'relative';
+    filterBtn.appendChild(filterDropdown);
+    
+    // Toggle filter dropdown
+    filterBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isVisible = filterDropdown.style.display === 'block';
+        filterDropdown.style.display = isVisible ? 'none' : 'block';
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!filterBtn.contains(event.target)) {
+            filterDropdown.style.display = 'none';
+        }
+    });
+    
+    // Function to filter mathematicians based on selected interests
+    function filterMathematicians() {
+        const selectedInterests = Array.from(filterDropdown.querySelectorAll('input[type="checkbox"]:checked'))
+            .map(checkbox => checkbox.value);
+        
+        const allCards = document.querySelectorAll('.mathematician-card');
+        const activeFilters = selectedInterests.length > 0;
+        
+        // Update filter button text to show selected count
+        if (activeFilters) {
+            filterBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+                Filters (${selectedInterests.length})
+            `;
+            filterBtn.style.backgroundColor = '#1677ff';
+            filterBtn.style.color = 'white';
+        } else {
+            filterBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+                Filter by Interest
+            `;
+            filterBtn.style.backgroundColor = '#f0f0f0';
+            filterBtn.style.color = '#333';
+        }
+        
+        allCards.forEach(card => {
+            if (!activeFilters) {
+                card.style.display = 'flex';
+                return;
+            }
+            
+            const cardInterests = Array.from(card.querySelectorAll('.interest-tag'))
+                .map(tag => tag.textContent);
+            
+            const hasMatchingInterest = selectedInterests.some(interest => 
+                cardInterests.includes(interest)
+            );
+            
+            card.style.display = hasMatchingInterest ? 'flex' : 'none';
+        });
+        
+        // Update filter button styling to indicate active filters
+        filterBtn.classList.toggle('active-filter', activeFilters);
+    }
+});
+    // Add responsive styles
+    const style = document.createElement('style');
+    style.textContent = `
+        @media (max-width: 768px) {
+            .filter-dropdown {
+                width: 100%;
+                right: 0;
+                left: 0;
+                position: absolute;
+            }
+        }
+        
+        .active-filter {
+            background-color: #1677ff !important;
+            color: white !important;
+        }
+    `;
+    document.head.appendChild(style);
+
+    </script>
+</body>
+</html>
