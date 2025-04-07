@@ -410,7 +410,20 @@
             padding: 10px 15px;
             border-radius: 15px;
         }
-
+        .comment-content, .post-content {
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+.post-card, .comment, .reply {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+/* Prevent input fields from overflowing */
+.comment-input, .post-input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+}
         .comment-author-name {
             font-weight: bold;
             color: #111;
@@ -485,6 +498,18 @@
 .reply-form {
   display: flex;
   margin: 8px 0;
+  width: 100%; /* Ensure it takes full width of parent */
+}
+.reply-form .comment-input {
+  min-width: 0; /* Allow inputs to shrink below their content size */
+  flex: 1; /* Take available space */
+}
+
+.reply-form .comment-submit,
+.comment-submit {
+  white-space: nowrap; /* Prevent "Reply" text from wrapping */
+  min-width: 60px; /* Minimum width for the button */
+  flex-shrink: 0; /* Prevent button from shrinking */
 }
 
 .replies .comment-content {
@@ -495,17 +520,7 @@
   font-size: 11px;
 }
 
-.reply {
-    margin-left: 40px; /* Consistent indentation for all replies */
-    display: flex;
-    margin-top: 10px;
-}
 
-.reply-indicator {
-    font-size: 0.8em;
-    color: #6b7280;
-    margin-bottom: 4px;
-}
 
 .comment + .reply, 
 .reply + .reply {
@@ -565,6 +580,49 @@
     border-bottom: 1px solid #f1f5f9;
 }
 
+.reply {
+    border-left: 2px solid #e0e0e0;
+    margin-left: 20px;
+    padding-left: 10px;
+}
+
+/* Style for the reply indicator text */
+.reply-indicator {
+    font-size: 0.8em;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+/* Improved mobile responsiveness for comments */
+@media (max-width: 576px) {
+  .comment, .reply {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .comment-author-pic, .reply-author-pic {
+    margin-bottom: 5px;
+  }
+  
+  .comment-content {
+    width: 100%;
+  }
+  
+  .reply {
+    margin-left: 10px; /* Reduce left margin on mobile */
+    padding-left: 5px; /* Reduce left padding on mobile */
+  }
+  
+  /* Fix for reply button */
+  .reply-form {
+    width: 100%;
+  }
+  
+  /* Make sure the forms stay in a row */
+  .comment-form, .reply-form {
+    flex-direction: row;
+    width: 100%;
+  }
+}
     </style>
 </head>
 <body>
@@ -772,7 +830,7 @@
             });
         }
     
-    function renderComments(comments) {
+        function renderComments(comments) {
     if (comments.length === 0) {
         return `<div class="no-comments">No comments yet. Be the first to comment!</div>`;
     }
@@ -780,15 +838,18 @@
     // Filter top-level comments (those without a parentId)
     const topLevelComments = comments.filter(comment => !comment.parentId);
     
-    return topLevelComments.map(comment => {
-        return `
+    let commentHTML = '';
+    
+    // For each top level comment
+    topLevelComments.forEach(comment => {
+        // Add the comment
+        commentHTML += `
             <div class="comment" data-comment-id="${comment.id}">
                 <img src="${comment.author.profilePic}" alt="${comment.author.name}" class="comment-author-pic">
                 <div class="comment-content">
                     <div class="comment-author-name">${comment.author.name}</div>
                     <div class="comment-text">${comment.text}</div>
                     <div class="comment-actions">
-                        <span class="comment-action">Like</span>
                         <span class="comment-action" onclick="toggleReplyForm(${comment.id})">Reply</span>
                     </div>
                     ${comment.isReplyFormVisible ? 
@@ -799,11 +860,55 @@
                     }
                 </div>
             </div>
-            <div class="replies-section">
-                ${renderAllReplies(comments, comment.id)}
-            </div>
         `;
-    }).join('');
+        
+        // Find all replies for this comment, direct and indirect (all descendants)
+        const getAllDescendantReplies = (commentId) => {
+            // Get direct replies
+            const directReplies = comments.filter(c => c.parentId === commentId);
+            
+            // For each direct reply, get its replies recursively
+            let allReplies = [...directReplies];
+            directReplies.forEach(reply => {
+                const childReplies = getAllDescendantReplies(reply.id);
+                allReplies = [...allReplies, ...childReplies];
+            });
+            
+            return allReplies;
+        };
+        
+        // Get all replies for this comment in flattened order
+        const allReplies = getAllDescendantReplies(comment.id);
+        
+        // Sort replies by timestamp or ID to ensure proper order
+        // Assuming newer replies (higher IDs) should appear below older ones
+        allReplies.sort((a, b) => a.id - b.id);
+        
+        // Add all replies sequentially
+        allReplies.forEach(reply => {
+            commentHTML += `
+                <div class="reply" data-comment-id="${reply.id}" data-parent-id="${reply.parentId}">
+                    <img src="${reply.author.profilePic}" alt="${reply.author.name}" class="comment-author-pic reply-author-pic">
+                    <div class="comment-content">
+                        <div class="comment-author-name">${reply.author.name}</div>
+                        <div class="reply-indicator">Replying to @${findCommentAuthorName(comments, reply.parentId)}</div>
+                        <div class="comment-text">${reply.text}</div>
+                        <div class="comment-actions">
+                            <span class="comment-action" onclick="toggleReplyForm(${reply.id})">Reply</span>
+                        </div>
+                        ${reply.isReplyFormVisible ? 
+                            `<form class="reply-form" onsubmit="addReply(event, ${reply.id})">
+                                <input type="text" class="comment-input" placeholder="Write a reply..." required>
+                                <button type="submit" class="comment-submit">Reply</button>
+                            </form>` : ''
+                        }
+                    </div>
+                </div>
+            `;
+        });
+    });
+    
+    return commentHTML;
 }
     
         // Function to render replies to a specific comment
@@ -813,6 +918,7 @@
     
     if (replies.length === 0) return '';
     
+    // Render all replies as a flat list
     return replies.map(reply => `
         <div class="reply" data-comment-id="${reply.id}" data-parent-id="${reply.parentId}">
             <img src="${reply.author.profilePic}" alt="${reply.author.name}" class="comment-author-pic reply-author-pic">
@@ -821,7 +927,6 @@
                 <div class="reply-indicator">Replying to @${findCommentAuthorName(allComments, reply.parentId)}</div>
                 <div class="comment-text">${reply.text}</div>
                 <div class="comment-actions">
-                    <span class="comment-action">Like</span>
                     <span class="comment-action" onclick="toggleReplyForm(${reply.id})">Reply</span>
                 </div>
                 ${reply.isReplyFormVisible ? 
@@ -941,59 +1046,6 @@ function findCommentAuthorName(comments, commentId) {
     
         // Function to preview the image before posting
         function previewImage(input) {
-            const preview = document.getElementById('image-preview');
-            const file = input.files[0];
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-    
-        // Function to create a new post
-        document.getElementById('create-post-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const title = document.getElementById('post-title').value.trim();
-            const content = document.getElementById('post-content').value.trim();
-            const imagePreview = document.getElementById('image-preview');
-            
-            if (title && content) {
-                posts.unshift({
-                    id: Date.now(),
-                    author: {
-                        name: "You",
-                        profilePic: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2'><circle cx='12' cy='8' r='5'/><path d='M20 21v-2a7 7 0 0 0-14 0v2'/></svg>"
-                    },
-                    timestamp: "Just now",
-                    title: title,
-                    content: content,
-                    image: document.getElementById('image-container').classList.contains('visible') ? document.getElementById('image-preview').src : null,
-                    likes: 0,
-                    comments: [],
-                    isLiked: false,
-                    commentsVisible: false
-                });
-                
-                // Reset the form
-                this.reset();
-                imagePreview.style.display = 'none';
-                
-                // Render posts with the new post at the top
-                renderPosts();
-            }
-        });
-    
-        // Convert existing comments to the new format with reply support
-        convertExistingComments();
-        
-        // Initial render
-        renderPosts();
-        function previewImage(input) {
     const container = document.getElementById('image-container');
     const preview = document.getElementById('image-preview');
     const file = input.files[0];
@@ -1007,6 +1059,45 @@ function findCommentAuthorName(comments, commentId) {
         reader.readAsDataURL(file);
     }
 }
+
+    
+        // Function to create a new post
+        document.getElementById('create-post-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const title = document.getElementById('post-title').value.trim();
+    const content = document.getElementById('post-content').value.trim();
+    const imageContainer = document.getElementById('image-container');
+    const imagePreview = document.getElementById('image-preview');
+    
+    if (title && content) {
+        posts.unshift({
+            id: Date.now(),
+            author: {
+                name: "You",
+                profilePic: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2'><circle cx='12' cy='8' r='5'/><path d='M20 21v-2a7 7 0 0 0-14 0v2'/></svg>"
+            },
+            timestamp: "Just now",
+            title: title,
+            content: content,
+            image: imageContainer.classList.contains('visible') ? imagePreview.src : null,
+            likes: 0,
+            comments: [],
+            isLiked: false,
+            commentsVisible: false
+        });
+        
+        // Reset the form
+        this.reset();
+        
+        // Also explicitly reset the image preview
+        imageContainer.classList.remove('visible');
+        imagePreview.src = '#';
+        
+        // Render posts with the new post at the top
+        renderPosts();
+    }
+});
 
 // Function to remove the image
 function removeImage() {
@@ -1023,6 +1114,19 @@ function removeImage() {
     // Clear the preview
     preview.src = '#';
 }
+document.getElementById('post-image').addEventListener('change', function() {
+    previewImage(this);
+});
+// Initialize the feed when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    convertExistingComments(); // Convert existing comments to the new format
+    renderPosts(); // Render all posts
+
+    window.addEventListener('resize', function() {
+        // You might need to re-render or adjust UI elements on resize
+        // This depends on your specific requirements
+    });
+});
     </script>
 </body>
 </html>

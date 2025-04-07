@@ -843,6 +843,109 @@
         grid-column: span 1;
     }
 }
+:root {
+            --primary-blue: #4169e1;
+            --light-blue: #e8f0fe;
+            --text-dark: #333333;
+            --text-gray: #666666;
+            --background: #ffffff;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .faq-section {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .faq-title {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .faq-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .faq-item {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .faq-question {
+            padding: 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            background-color: var(--background);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid transparent;
+        }
+
+        .faq-question.active {
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .faq-question:after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.active:after {
+            content: '−';
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 20px;
+            color: var(--text-gray);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .faq-answer.active {
+            max-height: 300px;
+            padding: 0 20px 20px;
+        }
+
+        @media (max-width: 768px) {
+            .faq-title {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1069,7 +1172,44 @@
             <button class="discover-more-btn">Discover More Fields</button>
         </div>
     </section>
+    <section class="faq-section">
+        <div class="faq-header">
+            <h2 class="faq-title">Frequently Asked Questions</h2>
+            <p class="faq-subtitle">Find answers to common questions about our mathematical community platform and how to get the most out of your experience.</p>
+        </div>
     
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">How do I find collaboration partners?</div>
+                <div class="faq-answer">Our matching algorithm pairs you with mathematicians who share similar interests and research areas. Navigate to the Matches section to see your recommended connections, or use the Discover feature to browse profiles by specialty, research topic, or academic focus.</div>
+            </div>
+    
+            <div class="faq-item">
+                <div class="faq-question">Can I showcase my published papers?</div>
+                <div class="faq-answer">Absolutely! In your profile, you can add links to your published papers, attach PDFs of your work, and highlight key mathematical achievements. This helps potential collaborators understand your expertise and research interests.</div>
+            </div>
+    
+            <div class="faq-item">
+                <div class="faq-question">How do I join discussion groups?</div>
+                <div class="faq-answer">Visit the Discover section to browse available discussion groups organized by mathematical fields. You can join existing conversations or create your own topic to engage with like-minded mathematicians around specific problems or areas of study.</div>
+            </div>
+    
+            <div class="faq-item">
+                <div class="faq-question">Is Maths-matchmaker free to use?</div>
+                <div class="faq-answer">Maths-matchmaker offers both free and premium membership options. The free version gives you access to basic features, while our premium subscription unlocks advanced matching algorithms, unlimited messaging, and participation in exclusive virtual meetups and workshops.</div>
+            </div>
+    
+            <div class="faq-item">
+                <div class="faq-question">How do I update my mathematical interests?</div>
+                <div class="faq-answer">You can update your interests at any time through your Profile settings. We recommend keeping your mathematical specialties, current research topics, and collaboration preferences up-to-date to ensure you get the most relevant connection suggestions.</div>
+            </div>
+    
+            <div class="faq-item">
+                <div class="faq-question">Can I connect with mathematicians internationally?</div>
+                <div class="faq-answer">Yes! Maths-matchmaker has a global community of mathematicians from diverse backgrounds and cultures. Our platform supports multiple languages and time zone coordination to facilitate international collaboration and knowledge exchange.</div>
+            </div>
+        </div>
+    </section>
     <!-- Call to Action Section -->
     <section class="cta-section">
         <div class="cta-content">
@@ -1252,6 +1392,20 @@
                 navLinks.classList.remove('active');
             }
         });
+        document.addEventListener('DOMContentLoaded', function() {
+        const questions = document.querySelectorAll('.faq-question');
+        
+        questions.forEach(question => {
+            question.addEventListener('click', function() {
+                // Toggle the active class on the question
+                this.classList.toggle('active');
+                
+                // Toggle the active class on the answer
+                const answer = this.nextElementSibling;
+                answer.classList.toggle('active');
+            });
+        });
+    });
     </script>
 </body>
 </html>
